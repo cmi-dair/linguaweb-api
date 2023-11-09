@@ -1,1 +1,1 @@
-""".. include:: ../../README.md"""  # noqa: D415
+"""Main module of the Linguaweb API."""
