@@ -5,6 +5,7 @@ import pytest
 from fastapi import testclient
 
 from linguaweb_api import main
+from linguaweb_api.microservices import sql
 
 API_ROOT = "/api/v1"
 
@@ -13,6 +14,7 @@ class Endpoints(str, enum.Enum):
     """Enum class that represents the available endpoints for the API."""
 
     GET_HEALTH = f"{API_ROOT}/health"
+    GET_DESCRIPTION = f"{API_ROOT}/text/description"
 
 
 @pytest.fixture()
@@ -25,3 +27,9 @@ def endpoints() -> type[Endpoints]:
 def client() -> testclient.TestClient:
     """Returns a test client for the API."""
     return testclient.TestClient(main.app)
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _start_database() -> None:
+    """Starts the database."""
+    sql.Database().create_database()

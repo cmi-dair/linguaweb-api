@@ -1,7 +1,7 @@
 """Middleware for the FastAPI application."""
 import logging
 import uuid
-from collections.abc import Awaitable, Callable, MutableMapping
+from collections import abc
 from typing import Any
 
 import fastapi
@@ -26,8 +26,8 @@ class RequestLoggerMiddleware:  # pylint: disable=too-few-public-methods
     async def __call__(
         self,
         scope: dict[str, Any],
-        receive: Callable[[], Awaitable[dict[str, Any]]],
-        send: Callable[[MutableMapping[str, Any]], Awaitable[None]],
+        receive: abc.Callable[[], abc.Awaitable[dict[str, Any]]],
+        send: abc.Callable[[abc.MutableMapping[str, Any]], abc.Awaitable[None]],
     ) -> None:
         """Middleware method that handles incoming HTTP requests.
 

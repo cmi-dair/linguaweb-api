@@ -9,15 +9,58 @@ import pydantic_settings
 class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc]
     """Settings for the API."""
 
-    class Config:
-        """Configuration variables for the Settings class."""
-
-        prefix = "LW_"
-
     LOGGER_NAME: str = pydantic.Field("LinguaWeb API")
     LOGGER_VERBOSITY: int | None = pydantic.Field(
         logging.DEBUG,
         json_schema_extra={"env": "LOGGER_VERBOSITY"},
+    )
+
+    ENVIRONMENT: str = pydantic.Field(
+        "development",
+        json_schema_extra={"env": "ENVIRONMENT"},
+    )
+
+    OPENAI_API_KEY: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "OPENAI_API_KEY"},
+    )
+
+    POSTGRES_HOST: str = pydantic.Field(
+        "localhost",
+        json_schema_extra={"env": "POSTGRES_HOST"},
+    )
+    POSTGRES_PORT: int = pydantic.Field(
+        5432,
+        json_schema_extra={"env": "POSTGRES_PORT"},
+    )
+    POSTGRES_USER: pydantic.SecretStr = pydantic.Field(
+        "postgres",
+        json_schema_extra={"env": "POSTGRES_USER"},
+    )
+    POSTGRES_PASSWORD: pydantic.SecretStr = pydantic.Field(
+        "postgres",
+        json_schema_extra={"env": "POSTGRES_PASSWORD"},
+    )
+
+    MINIO_HOST: str = pydantic.Field(
+        "localhost",
+        json_schema_extra={"env": "MINIO_HOST"},
+    )
+    MINIO_PORT: int = pydantic.Field(
+        9000,
+        json_schema_extra={"env": "MINIO_PORT"},
+    )
+    MINIO_ROOT_USER: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "MINIO_ROOT_USER"},
+    )
+    MINIO_ROOT_PASSWORD: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "MINIO_ROOT_PASSWORD"},
+    )
+    MINIO_BUCKET: str = pydantic.Field(
+        "linguaweb",
+        json_schema_extra={"env": "MINIO_BUCKET"},
     )
 
 
