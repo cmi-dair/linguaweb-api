@@ -49,27 +49,6 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
         json_schema_extra={"env": "POSTGRES_PASSWORD"},
     )
 
-    MINIO_HOST: str = pydantic.Field(
-        "localhost",
-        json_schema_extra={"env": "MINIO_HOST"},
-    )
-    MINIO_PORT: int = pydantic.Field(
-        9000,
-        json_schema_extra={"env": "MINIO_PORT"},
-    )
-    MINIO_ROOT_USER: pydantic.SecretStr = pydantic.Field(
-        ...,
-        json_schema_extra={"env": "MINIO_ROOT_USER"},
-    )
-    MINIO_ROOT_PASSWORD: pydantic.SecretStr = pydantic.Field(
-        ...,
-        json_schema_extra={"env": "MINIO_ROOT_PASSWORD"},
-    )
-    MINIO_BUCKET: str = pydantic.Field(
-        "linguaweb",
-        json_schema_extra={"env": "MINIO_BUCKET"},
-    )
-
 
 @functools.lru_cache
 def get_settings() -> Settings:
