@@ -36,3 +36,35 @@ async def get_word_description(
     """
     logger.debug("Getting word description.")
     return await controller.get_word_description(session, gpt)
+
+
+@router.post(
+    "/check/{word_id}",
+    response_model=bool,
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "No checks provided.",
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Word not found.",
+        },
+    },
+    summary="Checks whether a word was guessed correctly.",
+    description="Takes a word ID and a word, and checks whether the word was guessed "
+    "correctly.",
+)
+async def check_word(
+    word_id: int = fastapi.Path(..., title="The ID of the word to check."),
+    checks: schemas.WordCheck = fastapi.Body(..., title="The information to check."),
+    session: orm.Session = fastapi.Depends(sql.get_session),
+) -> bool:
+    """Checks attributes of a word.
+
+    Args:
+        word_id: The ID of the word to check.
+        checks: The information to check.
+        session: The database session.
+    """
+    logger.debug("Checking word.")
+    return await controller.check_word(word_id, checks, session)

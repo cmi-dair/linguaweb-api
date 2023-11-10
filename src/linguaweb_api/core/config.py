@@ -9,12 +9,11 @@ import pydantic_settings
 class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc]
     """Settings for the API."""
 
-    class Config:
-        """Configuration for the settings."""
-
-        env_prefix = "LWAPI_"
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = pydantic_settings.SettingsConfigDict(
+        env_prefix="LWAPI_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
     LOGGER_NAME: str = pydantic.Field("LinguaWeb API")
     LOGGER_VERBOSITY: int | None = pydantic.Field(

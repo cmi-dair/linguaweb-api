@@ -2,9 +2,12 @@
 import enum
 
 import pytest
+import sqlalchemy
 from fastapi import testclient
+from sqlalchemy import orm
 
 from linguaweb_api import main
+from linguaweb_api.microservices import sql
 
 API_ROOT = "/api/v1"
 
@@ -12,8 +15,9 @@ API_ROOT = "/api/v1"
 class Endpoints(str, enum.Enum):
     """Enum class that represents the available endpoints for the API."""
 
-    GET_HEALTH = f"{API_ROOT}/health"
     GET_DESCRIPTION = f"{API_ROOT}/text/description"
+    POST_CHECK_WORD = f"{API_ROOT}/text/check/{{word_id}}"
+    GET_HEALTH = f"{API_ROOT}/health"
 
 
 @pytest.fixture()
@@ -32,3 +36,26 @@ def client() -> testclient.TestClient:
 def _start_database() -> None:
     """Starts the database."""
     main.database.create_database()
+
+
+@pytest.fixture()
+def session() -> orm.Session:
+    """Returns a database session."""
+    return next(sql.get_session())
+
+
+@pytest.fixture(autouse=True)
+def _clear_tables(session: orm.Session) -> None:
+    """Clear all tables by deleting all their rows.
+
+    Args:
+        session: The database session.
+    """
+    base = orm.declarative_base()
+    metadata = sqlalchemy.MetaData()
+    metadata.reflect(bind=session.get_bind())
+    base.metadata = metadata
+
+    for table in reversed(metadata.sorted_tables):
+        session.execute(table.delete())
+    session.commit()
