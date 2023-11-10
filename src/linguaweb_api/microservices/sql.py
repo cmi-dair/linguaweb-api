@@ -32,7 +32,7 @@ class Database:
         """
         logger.debug("Initializing database.")
         db_url = self.get_db_url()
-        engine_args: dict[str, Any] = {"echo": True}
+        engine_args: dict[str, Any] = {}
         if ENVIRONMENT == "development":
             engine_args["connect_args"] = {"check_same_thread": False}
             engine_args["poolclass"] = pool.StaticPool

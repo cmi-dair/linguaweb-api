@@ -1,4 +1,5 @@
 """Tests for the text endpoints."""
+import pytest
 import pytest_mock
 from fastapi import status, testclient
 from sqlalchemy import orm
@@ -7,22 +8,22 @@ from linguaweb_api.routers.text import models as text_model
 from tests.endpoint import conftest
 
 
-def test_get_description_entry_does_not_exist(
-    mocker: pytest_mock.MockFixture,
-    client: testclient.TestClient,
-    endpoints: conftest.Endpoints,
-) -> None:
-    """Tests the get health endpoint."""
-    mocker.patch(
-        "linguaweb_api.microservices.openai.GPT.run",
-        return_value="mock_description",
+@pytest.fixture()
+def _insert_text_task(session: orm.Session) -> None:
+    """Inserts a text task into the database.
+
+    Args:
+        session: The database session.
+    """
+    word = text_model.TextTask(
+        word="test",
+        description="mock_description",
+        synonyms="mock_synonyms",
+        antonyms="mock_antonyms",
+        jeopardy="mock_jeopardy",
     )
-
-    response = client.get(endpoints.GET_DESCRIPTION)
-
-    assert response.status_code == status.HTTP_200_OK
-    assert response.json()["description"] == "mock_description"
-    assert isinstance(response.json()["id"], int)
+    session.add(word)
+    session.commit()
 
 
 def test_get_description_entry_exist_without_description(
@@ -43,20 +44,14 @@ def test_get_description_entry_exist_without_description(
     assert isinstance(response.json()["id"], int)
 
 
+@pytest.mark.usefixtures("_insert_text_task")
 def test_check_word(
-    mocker: pytest_mock.MockFixture,
     client: testclient.TestClient,
     endpoints: conftest.Endpoints,
-    session: orm.Session,
 ) -> None:
     """Tests the check word description endpoint."""
-    word = text_model.TextTask(word="test", description="mock_description")
-    session.add(word)
-    session.flush()
-    session.commit()
-
     response = client.post(
-        endpoints.POST_CHECK_WORD.format(word_id=word.id),
+        endpoints.POST_CHECK_WORD.format(word_id=1),
         json={"word": "test", "description": "mock_description"},
     )
 

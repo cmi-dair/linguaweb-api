@@ -6,7 +6,7 @@ from fastapi import status
 from sqlalchemy import orm
 
 from linguaweb_api.core import config
-from linguaweb_api.microservices import openai, sql
+from linguaweb_api.microservices import sql
 from linguaweb_api.routers.text import controller, schemas
 
 settings = config.get_settings()
@@ -26,7 +26,6 @@ router = fastapi.APIRouter(prefix="/text", tags=["text"])
 )
 async def get_word_description(
     session: orm.Session = fastapi.Depends(sql.get_session),
-    gpt: openai.GPT = fastapi.Depends(openai.GPT),
 ) -> schemas.WordDescription:
     """Returns the description of a random word.
 
@@ -35,7 +34,72 @@ async def get_word_description(
         gpt: The GPT model to use.
     """
     logger.debug("Getting word description.")
-    return await controller.get_word_description(session, gpt)
+    text_task = await controller.get_text_task(session)
+    logger.debug("Got word description.")
+    return text_task
+
+
+@router.get(
+    "/synonym",
+    response_model=schemas.WordSynonym,
+    status_code=status.HTTP_200_OK,
+    summary="Returns synonyms of a random word.",
+    description="Returns synonyms of a random word.",
+)
+async def get_word_synonym(
+    session: orm.Session = fastapi.Depends(sql.get_session),
+) -> schemas.WordSynonym:
+    """Returns synonyms of a random word.
+
+    Args:
+        session: The database session.
+    """
+    logger.debug("Getting word synonym.")
+    text_task = await controller.get_text_task(session)
+    logger.debug("Got word synonym.")
+    return text_task
+
+
+@router.get(
+    "/antonym",
+    response_model=schemas.WordAntonym,
+    status_code=status.HTTP_200_OK,
+    summary="Returns antonyms of a random word.",
+    description="Returns antonyms of a random word.",
+)
+async def get_word_antonym(
+    session: orm.Session = fastapi.Depends(sql.get_session),
+) -> schemas.WordAntonym:
+    """Returns antonyms of a random word.
+
+    Args:
+        session: The database session.
+    """
+    logger.debug("Getting word antonym.")
+    text_task = await controller.get_text_task(session)
+    logger.debug("Got word antonym.")
+    return text_task
+
+
+@router.get(
+    "/jeopardy",
+    response_model=schemas.WordJeopardy,
+    status_code=status.HTTP_200_OK,
+    summary="Returns a jeopardy question of a random word.",
+    description="Returns a jeopardy question of a random word.",
+)
+async def get_word_jeopardy(
+    session: orm.Session = fastapi.Depends(sql.get_session),
+) -> schemas.WordJeopardy:
+    """Returns a jeopardy question of a random word.
+
+    Args:
+        session: The database session.
+    """
+    logger.debug("Getting word jeopardy.")
+    text_task = await controller.get_text_task(session)
+    logger.debug("Got word jeopardy.")
+    return text_task
 
 
 @router.post(
@@ -67,4 +131,6 @@ async def check_word(
         session: The database session.
     """
     logger.debug("Checking word.")
-    return await controller.check_word(word_id, checks, session)
+    is_correct = await controller.check_word(word_id, checks, session)
+    logger.debug("Checked word.")
+    return is_correct
