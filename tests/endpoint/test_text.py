@@ -48,6 +48,7 @@ def test_get_description_entry_exist_without_description(
 def test_check_word(
     client: testclient.TestClient,
     endpoints: conftest.Endpoints,
+    session: orm.Session,
 ) -> None:
     """Tests the check word description endpoint."""
     response = client.post(
@@ -55,6 +56,8 @@ def test_check_word(
         json={"word": "test", "description": "mock_description"},
     )
 
+    print("---hi!---")
+    print(session.query(text_model.TextTask).all())
     assert response.status_code == status.HTTP_200_OK
     assert response.json() is True
 
