@@ -29,7 +29,8 @@ def gpt_instance(
     return openai.GPT()
 
 
-def test_gpt_run_method(
+@pytest.mark.asyncio()
+async def test_gpt_run_method(
     gpt_instance: openai.GPT,
     mocker: pytest_mock.MockerFixture,
 ) -> None:
@@ -45,7 +46,10 @@ def test_gpt_run_method(
         },
     )
 
-    actual_response = gpt_instance.run(prompt=user_prompt, system_prompt=system_prompt)
+    actual_response = await gpt_instance.run(
+        prompt=user_prompt,
+        system_prompt=system_prompt,
+    )
 
     gpt_instance.client.chat.completions.create.assert_called_once_with(  # type: ignore[attr-defined]
         model=gpt_instance.model,

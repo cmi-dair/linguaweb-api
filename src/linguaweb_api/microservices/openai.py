@@ -1,4 +1,5 @@
 """This module contains interactions with OpenAI models."""
+import enum
 import logging
 from typing import Literal, TypedDict
 
@@ -11,6 +12,27 @@ OPENAI_API_KEY = settings.OPENAI_API_KEY
 LOGGER_NAME = settings.LOGGER_NAME
 
 logger = logging.getLogger(LOGGER_NAME)
+
+
+class Prompts(str, enum.Enum):
+    """A class representing the prompts for the GPT model."""
+
+    WORD_DESCRIPTION = (
+        "Return a brief definition for the word provided by the user without using the "
+        "word (or number, if relevant) in the definition."
+    )
+    WORD_SYNONYMS = (
+        "List synonyms for the following word without using the word (or "
+        "number, if relevant) at all as a comma separated list"
+    )
+    WORD_ANTONYMS = (
+        "List antonyms for the following word without using the word (or number, if "
+        "relevant) at all as a comma separated list"
+    )
+    WORD_JEOPARDY = (
+        "Return a very brief Jeopardy!-style description related to the following word "
+        "without using the word (or number, if relevant) at all"
+    )
 
 
 class Message(TypedDict):
@@ -38,7 +60,7 @@ class GPT:
         self.model = model
         self.client = openai.OpenAI(api_key=OPENAI_API_KEY.get_secret_value())
 
-    def run(self, *, prompt: str, system_prompt: str) -> str:
+    async def run(self, *, prompt: str, system_prompt: str) -> str:
         """Runs the GPT model.
 
         Args:
