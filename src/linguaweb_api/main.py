@@ -26,7 +26,8 @@ app.include_router(api_router)
 
 logger.info("Initializing microservices.")
 logger.debug("Initializing SQL microservice.")
-sql.Database().create_database()
+database = sql.Database()
+database.create_database()
 
 logger.info("Adding middleware.")
 logger.debug("Adding CORS middleware.")

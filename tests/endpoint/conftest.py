@@ -5,7 +5,6 @@ import pytest
 from fastapi import testclient
 
 from linguaweb_api import main
-from linguaweb_api.microservices import sql
 
 API_ROOT = "/api/v1"
 
@@ -32,4 +31,4 @@ def client() -> testclient.TestClient:
 @pytest.fixture(autouse=True, scope="session")
 def _start_database() -> None:
     """Starts the database."""
-    sql.Database().create_database()
+    main.database.create_database()

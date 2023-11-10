@@ -64,7 +64,7 @@ def test_create_database(
 @pytest.mark.parametrize(
     ("env", "expected_url"),
     [
-        ("development", "sqlite://"),
+        ("development", "sqlite:///linguaweb.db"),
         (
             "production",
             f"postgresql://{POSTGRES_USER.get_secret_value()}:{POSTGRES_PASSWORD.get_secret_value()}@{POSTGRES_HOST}:{POSTGRES_PORT}/linguaweb",

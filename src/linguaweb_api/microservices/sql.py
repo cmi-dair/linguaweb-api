@@ -1,9 +1,10 @@
 """A module for interacting with the SQL database."""
 import logging
 from collections import abc
+from typing import Any
 
 import sqlalchemy
-from sqlalchemy import orm
+from sqlalchemy import orm, pool
 
 from linguaweb_api.core import config
 
@@ -31,14 +32,12 @@ class Database:
         """
         logger.debug("Initializing database.")
         db_url = self.get_db_url()
-        connect_args = (
-            {} if ENVIRONMENT != "development" else {"check_same_thread": False}
-        )
-        self.engine = sqlalchemy.create_engine(
-            db_url,
-            echo=True,
-            connect_args=connect_args,
-        )
+        engine_args: dict[str, Any] = {"echo": True}
+        if ENVIRONMENT == "development":
+            engine_args["connect_args"] = {"check_same_thread": False}
+            engine_args["poolclass"] = pool.StaticPool
+
+        self.engine = sqlalchemy.create_engine(db_url, **engine_args)
         self.session_factory = orm.scoped_session(
             orm.sessionmaker(
                 autocommit=False,
@@ -60,7 +59,7 @@ class Database:
         Otherwise, returns a PostgreSQL URL based on the environment variables.
         """
         if ENVIRONMENT == "development":
-            return "sqlite://"
+            return "sqlite:///linguaweb.db"
         return (
             "postgresql://"
             f"{POSTGRES_USER.get_secret_value()}:"
