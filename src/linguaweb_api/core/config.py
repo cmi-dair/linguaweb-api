@@ -9,15 +9,43 @@ import pydantic_settings
 class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc]
     """Settings for the API."""
 
-    class Config:
-        """Configuration variables for the Settings class."""
-
-        prefix = "LW_"
+    model_config = pydantic_settings.SettingsConfigDict(
+        env_prefix="LWAPI_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
     LOGGER_NAME: str = pydantic.Field("LinguaWeb API")
     LOGGER_VERBOSITY: int | None = pydantic.Field(
         logging.DEBUG,
         json_schema_extra={"env": "LOGGER_VERBOSITY"},
+    )
+
+    ENVIRONMENT: str = pydantic.Field(
+        "development",
+        json_schema_extra={"env": "ENVIRONMENT"},
+    )
+
+    OPENAI_API_KEY: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "OPENAI_API_KEY"},
+    )
+
+    POSTGRES_HOST: str = pydantic.Field(
+        "localhost",
+        json_schema_extra={"env": "POSTGRES_HOST"},
+    )
+    POSTGRES_PORT: int = pydantic.Field(
+        5432,
+        json_schema_extra={"env": "POSTGRES_PORT"},
+    )
+    POSTGRES_USER: pydantic.SecretStr = pydantic.Field(
+        "postgres",
+        json_schema_extra={"env": "POSTGRES_USER"},
+    )
+    POSTGRES_PASSWORD: pydantic.SecretStr = pydantic.Field(
+        "postgres",
+        json_schema_extra={"env": "POSTGRES_PASSWORD"},
     )
 
 

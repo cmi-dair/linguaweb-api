@@ -4,7 +4,10 @@ from fastapi import status, testclient
 from tests.endpoint import conftest
 
 
-def test_health(client: testclient.TestClient, endpoints: conftest.Endpoints) -> None:
+def test_get_health(
+    client: testclient.TestClient,
+    endpoints: conftest.Endpoints,
+) -> None:
     """Tests the get health endpoint."""
     response = client.get(endpoints.GET_HEALTH)
 
