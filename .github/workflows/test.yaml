@@ -17,18 +17,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      minio:
-        image: minio/minio:latest
-        env:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio
-        ports:
-          - 9000:9000
-        volumes:
-          - ${{ github.workspace }}/data:/data
-        options: --entrypoint "server /data" --health-cmd "curl -f http://localhost:9000/minio/health/ready || exit 1" --health-interval 10s --health-timeout 5s --health-retries 3
-
-
       postgres:
         image: postgres:16
         env:
