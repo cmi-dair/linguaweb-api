@@ -27,22 +27,71 @@ def text_task(session: orm.Session) -> text_model.TextTask:
     return word
 
 
-def test_get_description_entry_exist_without_description(
+@pytest.mark.parametrize(
+    "endpoint_type",
+    [
+        "description",
+        "synonyms",
+        "antonyms",
+        "jeopardy",
+    ],
+)
+def test_get_text_entry_exist(
     mocker: pytest_mock.MockFixture,
+    endpoint_type: str,
+    text_task: text_model.TextTask,
     client: testclient.TestClient,
     endpoints: conftest.Endpoints,
 ) -> None:
-    """Tests the get health endpoint."""
+    """Tests the get text task endpoints with an existing file."""
     mocker.patch(
-        "linguaweb_api.microservices.openai.GPT.run",
-        return_value="mock_description",
+        "linguaweb_api.core.dictionary.get_random_word",
+        return_value=text_task.word,
     )
+    endpoint = getattr(endpoints, f"GET_{endpoint_type.upper()}")
 
-    response = client.get(endpoints.GET_DESCRIPTION)
+    response = client.get(endpoint)
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["description"] == "mock_description"
+    assert response.json()["id"] == text_task.id
+    if endpoint_type in ("synonyms", "antonyms"):
+        assert response.json()[endpoint_type][0] == f"mock_{endpoint_type}"
+    else:
+        assert response.json()[endpoint_type] == f"mock_{endpoint_type}"
+
+
+@pytest.mark.parametrize(
+    "endpoint_type",
+    [
+        "description",
+        "synonyms",
+        "antonyms",
+        "jeopardy",
+    ],
+)
+def test_get_text_entry_does_not_exist(
+    mocker: pytest_mock.MockFixture,
+    endpoint_type: str,
+    client: testclient.TestClient,
+    endpoints: conftest.Endpoints,
+) -> None:
+    """Tests the get text task endpoints with no existing file."""
+    mock_gpt = mocker.patch(
+        "linguaweb_api.microservices.openai.GPT.run",
+        return_value="mock",
+    )
+    expected_n_gpt_calls = 4
+    endpoint = getattr(endpoints, f"GET_{endpoint_type.upper()}")
+
+    response = client.get(endpoint)
+
+    assert mock_gpt.call_count == expected_n_gpt_calls
+    assert response.status_code == status.HTTP_200_OK
     assert isinstance(response.json()["id"], int)
+    if endpoint_type in ("synonyms", "antonyms"):
+        assert isinstance(response.json()[endpoint_type], list)
+    else:
+        assert isinstance(response.json()[endpoint_type], str)
 
 
 def test_check_word_exists(

@@ -9,18 +9,18 @@ class WordDescription(pydantic.BaseModel):
     description: str
 
 
-class WordSynonym(pydantic.BaseModel):
+class WordSynonyms(pydantic.BaseModel):
     """Word synonym task."""
 
     id: int
-    synonyms: str
+    synonyms: list[str]
 
 
-class WordAntonym(pydantic.BaseModel):
+class WordAntonyms(pydantic.BaseModel):
     """Word antonym task."""
 
     id: int
-    antonyms: str
+    antonyms: list[str]
 
 
 class WordJeopardy(pydantic.BaseModel):

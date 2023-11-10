@@ -40,15 +40,15 @@ async def get_word_description(
 
 
 @router.get(
-    "/synonym",
-    response_model=schemas.WordSynonym,
+    "/synonyms",
+    response_model=schemas.WordSynonyms,
     status_code=status.HTTP_200_OK,
     summary="Returns synonyms of a random word.",
     description="Returns synonyms of a random word.",
 )
 async def get_word_synonym(
     session: orm.Session = fastapi.Depends(sql.get_session),
-) -> schemas.WordSynonym:
+) -> schemas.WordSynonyms:
     """Returns synonyms of a random word.
 
     Args:
@@ -61,15 +61,15 @@ async def get_word_synonym(
 
 
 @router.get(
-    "/antonym",
-    response_model=schemas.WordAntonym,
+    "/antonyms",
+    response_model=schemas.WordAntonyms,
     status_code=status.HTTP_200_OK,
     summary="Returns antonyms of a random word.",
     description="Returns antonyms of a random word.",
 )
 async def get_word_antonym(
     session: orm.Session = fastapi.Depends(sql.get_session),
-) -> schemas.WordAntonym:
+) -> schemas.WordAntonyms:
     """Returns antonyms of a random word.
 
     Args:

@@ -16,6 +16,9 @@ class Endpoints(str, enum.Enum):
     """Enum class that represents the available endpoints for the API."""
 
     GET_DESCRIPTION = f"{API_ROOT}/text/description"
+    GET_SYNONYMS = f"{API_ROOT}/text/synonyms"
+    GET_ANTONYMS = f"{API_ROOT}/text/antonyms"
+    GET_JEOPARDY = f"{API_ROOT}/text/jeopardy"
     POST_CHECK_WORD = f"{API_ROOT}/text/check/{{word_id}}"
     GET_HEALTH = f"{API_ROOT}/health"
 
