@@ -9,7 +9,7 @@ from tests.endpoint import conftest
 
 
 @pytest.fixture()
-def _insert_text_task(session: orm.Session) -> None:
+def text_task(session: orm.Session) -> text_model.TextTask:
     """Inserts a text task into the database.
 
     Args:
@@ -24,6 +24,7 @@ def _insert_text_task(session: orm.Session) -> None:
     )
     session.add(word)
     session.commit()
+    return word
 
 
 def test_get_description_entry_exist_without_description(
@@ -44,20 +45,17 @@ def test_get_description_entry_exist_without_description(
     assert isinstance(response.json()["id"], int)
 
 
-@pytest.mark.usefixtures("_insert_text_task")
-def test_check_word(
+def test_check_word_exists(
     client: testclient.TestClient,
     endpoints: conftest.Endpoints,
-    session: orm.Session,
+    text_task: text_model.TextTask,
 ) -> None:
     """Tests the check word description endpoint."""
     response = client.post(
-        endpoints.POST_CHECK_WORD.format(word_id=1),
+        endpoints.POST_CHECK_WORD.format(word_id=text_task.id),
         json={"word": "test", "description": "mock_description"},
     )
 
-    print("---hi!---")
-    print(session.query(text_model.TextTask).all()[0].id)
     assert response.status_code == status.HTTP_200_OK
     assert response.json() is True
 
