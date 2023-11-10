@@ -2,6 +2,7 @@
 import logging
 
 import fastapi
+from fastapi import status
 from sqlalchemy import orm
 
 from linguaweb_api.core import config
@@ -16,7 +17,13 @@ logger = logging.getLogger(LOGGER_NAME)
 router = fastapi.APIRouter(prefix="/text", tags=["text"])
 
 
-@router.get("/description")
+@router.get(
+    "/description",
+    response_model=schemas.WordDescription,
+    status_code=status.HTTP_200_OK,
+    summary="Returns the description of a random word.",
+    description="Returns the description of a random word.",
+)
 async def get_word_description(
     session: orm.Session = fastapi.Depends(sql.get_session),
     gpt: openai.GPT = fastapi.Depends(openai.GPT),

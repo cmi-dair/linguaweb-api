@@ -6,9 +6,35 @@ on:
       - main
   pull_request:
 
+env:
+  LWAPI_ENVIRONMENT: testing
+  LWAPI_MINIO_HOST: localhost
+  LWAPI_MINIO_PORT: 9000
+  LWAPI_OPENAI_API_KEY: fake_key
+
 jobs:
-  unit:
+  tests:
     runs-on: ubuntu-latest
+
+    services:
+      minio:
+        image: minio/minio
+        env:
+          MINIO_ACCESS_KEY: minio
+          MINIO_SECRET_KEY: minio
+        ports:
+          - 9000:9000
+        options: --health-cmd "curl -f http://localhost:9000/minio/health/live" --health-interval 10s --health-timeout 5s --health-retries 3
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: linguaweb
+        ports:
+          - 5432:5432
+        options: --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 3
+
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
