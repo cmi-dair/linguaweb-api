@@ -57,7 +57,7 @@ def test_check_word(
     )
 
     print("---hi!---")
-    print(session.query(text_model.TextTask).all())
+    print(session.query(text_model.TextTask).all()[0].id)
     assert response.status_code == status.HTTP_200_OK
     assert response.json() is True
 
