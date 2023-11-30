@@ -12,8 +12,7 @@ from linguaweb_api.microservices import sql
 settings = config.get_settings()
 POSTGRES_USER = settings.POSTGRES_USER
 POSTGRES_PASSWORD = settings.POSTGRES_PASSWORD
-POSTGRES_HOST = settings.POSTGRES_HOST
-POSTGRES_PORT = settings.POSTGRES_PORT
+POSTGRES_URL = settings.POSTGRES_URL
 
 
 @pytest.fixture()
@@ -67,7 +66,7 @@ def test_create_database(
         ("development", "sqlite:///linguaweb.db"),
         (
             "production",
-            f"postgresql://{POSTGRES_USER.get_secret_value()}:{POSTGRES_PASSWORD.get_secret_value()}@{POSTGRES_HOST}:{POSTGRES_PORT}/linguaweb",
+            f"postgresql://{POSTGRES_USER.get_secret_value()}:{POSTGRES_PASSWORD.get_secret_value()}@{POSTGRES_URL}/linguaweb",
         ),
     ],
 )

@@ -31,13 +31,30 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
         json_schema_extra={"env": "OPENAI_API_KEY"},
     )
 
-    POSTGRES_HOST: str = pydantic.Field(
-        "localhost",
-        json_schema_extra={"env": "POSTGRES_HOST"},
+    S3_ENDPOINT_URL: str | None = pydantic.Field(
+        None,
+        json_schema_extra={"env": "S3_ENDPOINT_URL"},
     )
-    POSTGRES_PORT: int = pydantic.Field(
-        5432,
-        json_schema_extra={"env": "POSTGRES_PORT"},
+    S3_BUCKET_NAME: str = pydantic.Field(
+        "linguaweb",
+        json_schema_extra={"env": "S3_BUCKET_NAME"},
+    )
+    S3_ACCESS_KEY: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "S3_ACCESS_KEY"},
+    )
+    S3_SECRET_KEY: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "S3_SECRET_KEY"},
+    )
+    S3_REGION: str = pydantic.Field(
+        "us-east-1",
+        json_schema_extra={"env": "S3_REGION"},
+    )
+
+    POSTGRES_URL: str = pydantic.Field(
+        "localhost:5432",
+        json_schema_extra={"env": "POSTGRES_HOST"},
     )
     POSTGRES_USER: pydantic.SecretStr = pydantic.Field(
         "postgres",

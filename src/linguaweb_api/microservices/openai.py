@@ -80,4 +80,4 @@ class GPT:
             messages=messages,  # type: ignore[arg-type]
         )
 
-        return response["choices"][0]["message"]["content"]  # type: ignore[index]
+        return response.choices[0].message.content

@@ -10,8 +10,7 @@ from linguaweb_api.core import config
 
 settings = config.get_settings()
 LOGGER_NAME = settings.LOGGER_NAME
-POSTGRES_HOST = settings.POSTGRES_HOST
-POSTGRES_PORT = settings.POSTGRES_PORT
+POSTGRES_URL = settings.POSTGRES_URL
 POSTGRES_USER = settings.POSTGRES_USER
 POSTGRES_PASSWORD = settings.POSTGRES_PASSWORD
 ENVIRONMENT = settings.ENVIRONMENT
@@ -59,12 +58,12 @@ class Database:
         Otherwise, returns a PostgreSQL URL based on the environment variables.
         """
         if ENVIRONMENT == "development":
-            return "sqlite:///linguaweb.db"
+            return "sqlite:///linguaweb.sqlite"
         return (
             "postgresql://"
             f"{POSTGRES_USER.get_secret_value()}:"
             f"{POSTGRES_PASSWORD.get_secret_value()}@"
-            f"{POSTGRES_HOST}:{POSTGRES_PORT}/linguaweb"
+            f"{POSTGRES_URL}/linguaweb"
         )
 
 
