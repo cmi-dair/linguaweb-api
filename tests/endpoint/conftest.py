@@ -15,11 +15,14 @@ API_ROOT = "/api/v1"
 class Endpoints(str, enum.Enum):
     """Enum class that represents the available endpoints for the API."""
 
-    GET_DESCRIPTION = f"{API_ROOT}/text/description"
-    GET_SYNONYMS = f"{API_ROOT}/text/synonyms"
-    GET_ANTONYMS = f"{API_ROOT}/text/antonyms"
-    GET_JEOPARDY = f"{API_ROOT}/text/jeopardy"
-    POST_CHECK_WORD = f"{API_ROOT}/text/check/{{word_id}}"
+    POST_ADD_WORD = f"{API_ROOT}/admin/add_word"
+    POST_ADD_PRESET_WORDS = f"{API_ROOT}/admin/add_preset_words"
+
+    GET_WORD = f"{API_ROOT}/words/{{word_id}}"
+    GET_ALL_WORD_IDS = f"{API_ROOT}/words"
+    GET_AUDIO = f"{API_ROOT}/words/download/{{audio_id}}"
+    POST_CHECK_WORD = f"{API_ROOT}/words/check/{{word_id}}"
+
     GET_HEALTH = f"{API_ROOT}/health"
 
 

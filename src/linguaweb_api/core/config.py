@@ -5,6 +5,8 @@ import logging
 import pydantic
 import pydantic_settings
 
+from linguaweb_api.microservices import openai_constants
+
 
 class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc]
     """Settings for the API."""
@@ -29,6 +31,18 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
     OPENAI_API_KEY: pydantic.SecretStr = pydantic.Field(
         ...,
         json_schema_extra={"env": "OPENAI_API_KEY"},
+    )
+    OPENAI_VOICE: openai_constants.Voices = pydantic.Field(
+        "onyx",
+        json_schema_extra={"env": "OPENAI_VOICE"},
+    )
+    OPENAI_GPT_MODEL: openai_constants.GPTModels = pydantic.Field(
+        "gpt-4-1106-preview",
+        json_schema_extra={"env": "OPENAI_GPT_MODEL"},
+    )
+    OPENAI_TTS_MODEL: openai_constants.TTSModels = pydantic.Field(
+        "tts-1",
+        json_schema_extra={"env": "OPENAI_TTS_MODEL"},
     )
 
     S3_ENDPOINT_URL: str | None = pydantic.Field(
