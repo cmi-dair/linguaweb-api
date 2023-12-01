@@ -76,7 +76,7 @@ async def check_word(
     Notes:
         Case insensitive.
     """
-    logger.debug("Checking word.")
+    logger.debug("Checking word: %s", word)
     word_model = session.query(models.Word).filter_by(id=word_id).first()
     if not word_model:
         logger.warning("Word ID not found in database.")

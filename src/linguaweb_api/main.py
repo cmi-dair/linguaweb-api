@@ -26,14 +26,19 @@ app = fastapi.FastAPI(
         "url": "https://github.com/cmi-dair/",
         "email": "dair@childmind.org",
     },
+    swagger_ui_parameters={"operationsSorter": "method"},
     openapi_tags=[
         {
-            "name": "text",
-            "description": "Operations related to text.",
+            "name": "admin",
+            "description": "Operations reserved for administrators.",
         },
         {
             "name": "health",
             "description": "Operations related to the health of the API.",
+        },
+        {
+            "name": "words",
+            "description": "Operations related to words.",
         },
     ],
 )

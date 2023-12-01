@@ -45,7 +45,7 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
   "src"
 ]
-env_files = ".env.example"
+env_files = [".env.test"]
 
 [tool.mypy]
 ignore_missing_imports = true

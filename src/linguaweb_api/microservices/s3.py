@@ -1,4 +1,6 @@
 """Interactions with an S3/MinIO bucket."""
+import logging
+
 import boto3
 from botocore import errorfactory
 
@@ -10,6 +12,9 @@ S3_ENDPOINT_URL = settings.S3_ENDPOINT_URL
 S3_ACCESS_KEY = settings.S3_ACCESS_KEY
 S3_SECRET_KEY = settings.S3_SECRET_KEY
 S3_REGION = settings.S3_REGION
+LOGGER_NAME = settings.LOGGER_NAME
+
+logger = logging.getLogger(LOGGER_NAME)
 
 
 class S3:
@@ -26,6 +31,7 @@ class S3:
         Args:
             bucket_name: The name of the bucket.
         """
+        logger.debug("Connecting to S3 at: %s", S3_ENDPOINT_URL)
         self.s3 = boto3.resource(
             "s3",
             region_name=S3_REGION,

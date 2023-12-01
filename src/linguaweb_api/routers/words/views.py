@@ -42,8 +42,8 @@ async def get_all_word_ids(
     "/{identifier}",
     response_model=schemas.WordData,
     status_code=status.HTTP_200_OK,
-    summary="Returns the description of a random word.",
-    description="Returns the description of a random word.",
+    summary="Returns the data of a word.",
+    description="Returns the data of a word.",
     responses={
         status.HTTP_404_NOT_FOUND: {
             "description": "Word not found.",
@@ -66,9 +66,15 @@ async def get_word(
     return text_task
 
 
+@router.post(
+    "/check/{word_id}",
+    status_code=status.HTTP_200_OK,
+    summary="Checks attributes of a word.",
+    description="Checks attributes of a word.",
+)
 async def check_word(
     word_id: int = fastapi.Path(..., title="The ID of the word to check."),
-    word: str = fastapi.Body(..., title="The information to check."),
+    word: str = fastapi.Form(..., title="The information to check."),
     session: orm.Session = fastapi.Depends(sql.get_session),
 ) -> bool:
     """Checks attributes of a word.

@@ -1,5 +1,7 @@
 """Fixtures and configurations for testing the endpoints of the CTK API."""
+import contextlib
 import enum
+import os
 
 import pytest
 import sqlalchemy
@@ -10,6 +12,16 @@ from linguaweb_api import main
 from linguaweb_api.microservices import sql
 
 API_ROOT = "/api/v1"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _set_env() -> None:
+    """Sets the environment variables.
+
+    For mocking with moto, the s3 endpoint must be None.
+    """
+    with contextlib.suppress(KeyError):
+        del os.environ["LWAPI_S3_ENDPOINT_URL"]
 
 
 class Endpoints(str, enum.Enum):

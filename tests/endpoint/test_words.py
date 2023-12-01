@@ -78,6 +78,20 @@ def test_get_word_does_not_exist(
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
+def test_post_check_word(
+    word: models.Word,
+    client: testclient.TestClient,
+    endpoints: conftest.Endpoints,
+) -> None:
+    """Tests the check word endpoint."""
+    endpoint = endpoints.POST_CHECK_WORD.format(word_id=word.id)
+
+    response = client.post(endpoint, data={"word": word.word})
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() is True
+
+
 @moto.mock_s3
 def test_get_audio(
     mocker: pytest_mock.MockFixture,

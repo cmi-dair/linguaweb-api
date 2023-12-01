@@ -38,7 +38,7 @@ async def add_word(word: str, session: orm.Session, s3_client: s3.S3) -> models.
     logger.debug("Word does not exist in database.")
     text_tasks_promise = _get_text_tasks(word)
     listening_bytes_promise = _get_listening_task(word)
-    s3_key = f"{word}_{OPENAI_VOICE}.mp3"
+    s3_key = f"{word}_{OPENAI_VOICE.value}.mp3"
 
     text_tasks, listening_bytes = await asyncio.gather(
         text_tasks_promise,
