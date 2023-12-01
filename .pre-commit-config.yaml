@@ -30,3 +30,10 @@ repos:
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-json
+
+  - repo: local
+    hooks:
+    - id: check-env
+      name: Check environment
+      entry: /bin/bash ./pre-commit/check_env.sh
+      language: script
