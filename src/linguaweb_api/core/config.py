@@ -5,6 +5,8 @@ import logging
 import pydantic
 import pydantic_settings
 
+from linguaweb_api.microservices import openai_constants
+
 
 class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc]
     """Settings for the API."""
@@ -30,14 +32,43 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
         ...,
         json_schema_extra={"env": "OPENAI_API_KEY"},
     )
-
-    POSTGRES_HOST: str = pydantic.Field(
-        "localhost",
-        json_schema_extra={"env": "POSTGRES_HOST"},
+    OPENAI_VOICE: openai_constants.Voices = pydantic.Field(
+        "onyx",
+        json_schema_extra={"env": "OPENAI_VOICE"},
     )
-    POSTGRES_PORT: int = pydantic.Field(
-        5432,
-        json_schema_extra={"env": "POSTGRES_PORT"},
+    OPENAI_GPT_MODEL: openai_constants.GPTModels = pydantic.Field(
+        "gpt-4-1106-preview",
+        json_schema_extra={"env": "OPENAI_GPT_MODEL"},
+    )
+    OPENAI_TTS_MODEL: openai_constants.TTSModels = pydantic.Field(
+        "tts-1",
+        json_schema_extra={"env": "OPENAI_TTS_MODEL"},
+    )
+
+    S3_ENDPOINT_URL: str | None = pydantic.Field(
+        None,
+        json_schema_extra={"env": "S3_ENDPOINT_URL"},
+    )
+    S3_BUCKET_NAME: str = pydantic.Field(
+        "linguaweb",
+        json_schema_extra={"env": "S3_BUCKET_NAME"},
+    )
+    S3_ACCESS_KEY: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "S3_ACCESS_KEY"},
+    )
+    S3_SECRET_KEY: pydantic.SecretStr = pydantic.Field(
+        ...,
+        json_schema_extra={"env": "S3_SECRET_KEY"},
+    )
+    S3_REGION: str = pydantic.Field(
+        "us-east-1",
+        json_schema_extra={"env": "S3_REGION"},
+    )
+
+    POSTGRES_URL: str = pydantic.Field(
+        "localhost:5432",
+        json_schema_extra={"env": "POSTGRES_HOST"},
     )
     POSTGRES_USER: pydantic.SecretStr = pydantic.Field(
         "postgres",

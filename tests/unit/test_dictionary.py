@@ -13,19 +13,6 @@ def _clear_cache() -> None:
     dictionary.read_words.cache_clear()
 
 
-def test_get_random_word(mocker: pytest_mock.MockFixture) -> None:
-    """Tests if a random word is correctly returned."""
-    mock_words = ["word1", "word2", "word3"]
-    mocker.patch(
-        "linguaweb_api.core.dictionary.read_words",
-        return_value=mock_words,
-    )
-
-    word = dictionary.get_random_word()
-
-    assert word in mock_words
-
-
 def test_read_words(mocker: pytest_mock.MockFixture) -> None:
     """Tests if the words are correctly read from the dictionary file."""
     mocker.patch("pathlib.Path.open", mocker.mock_open(read_data="word1\nword2\nword3"))

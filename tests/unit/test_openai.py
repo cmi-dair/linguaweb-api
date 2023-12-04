@@ -5,7 +5,47 @@ from unittest import mock
 import pytest
 import pytest_mock
 
+from linguaweb_api.core import config
 from linguaweb_api.microservices import openai
+
+settings = config.get_settings()
+OPENAI_GPT_MODEL = settings.OPENAI_GPT_MODEL
+
+
+class MockedMessage:
+    """A mocked message object."""
+
+    def __init__(self, content: str) -> None:
+        """Initializes a new instance of the MockedMessage class.
+
+        Args:
+            content: The content of the message.
+        """
+        self.content = content
+
+
+class MockedChoice:
+    """A mocked choice object."""
+
+    def __init__(self, message: MockedMessage) -> None:
+        """Initializes a new instance of the MockedChoice class.
+
+        Args:
+            message: The message of the choice.
+        """
+        self.message = message
+
+
+class MockedOpenAiResponse:
+    """A mocked OpenAI response object."""
+
+    def __init__(self, choices: list[MockedChoice]) -> None:
+        """Initializes a new instance of the MockedOpenAiResponse class.
+
+        Args:
+            choices: The choices of the response.
+        """
+        self.choices = choices
 
 
 @pytest.fixture()
@@ -14,9 +54,12 @@ def mock_openai_client(
 ) -> mock.MagicMock:
     """Fixture to mock the OpenAI client."""
     mock_client = mock.MagicMock()
-    mock_client.chat.completions.create.return_value = {
-        "choices": [{"message": {"content": "Mocked response"}}],
-    }
+    mocked_response = MockedOpenAiResponse(
+        choices=[
+            MockedChoice(message=MockedMessage(content="Mocked response")),
+        ],
+    )
+    mock_client.chat.completions.create.return_value = mocked_response
     mocker.patch("openai.OpenAI", return_value=mock_client)
     return mock_client
 
@@ -52,7 +95,7 @@ async def test_gpt_run_method(
     )
 
     gpt_instance.client.chat.completions.create.assert_called_once_with(  # type: ignore[attr-defined]
-        model=gpt_instance.model,
+        model=OPENAI_GPT_MODEL,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},

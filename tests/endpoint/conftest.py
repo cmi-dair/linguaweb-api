@@ -1,5 +1,7 @@
 """Fixtures and configurations for testing the endpoints of the CTK API."""
+import contextlib
 import enum
+import os
 
 import pytest
 import sqlalchemy
@@ -12,14 +14,27 @@ from linguaweb_api.microservices import sql
 API_ROOT = "/api/v1"
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _set_env() -> None:
+    """Sets the environment variables.
+
+    For mocking with moto, the s3 endpoint must be None.
+    """
+    with contextlib.suppress(KeyError):
+        del os.environ["LWAPI_S3_ENDPOINT_URL"]
+
+
 class Endpoints(str, enum.Enum):
     """Enum class that represents the available endpoints for the API."""
 
-    GET_DESCRIPTION = f"{API_ROOT}/text/description"
-    GET_SYNONYMS = f"{API_ROOT}/text/synonyms"
-    GET_ANTONYMS = f"{API_ROOT}/text/antonyms"
-    GET_JEOPARDY = f"{API_ROOT}/text/jeopardy"
-    POST_CHECK_WORD = f"{API_ROOT}/text/check/{{word_id}}"
+    POST_ADD_WORD = f"{API_ROOT}/admin/add_word"
+    POST_ADD_PRESET_WORDS = f"{API_ROOT}/admin/add_preset_words"
+
+    GET_WORD = f"{API_ROOT}/words/{{word_id}}"
+    GET_ALL_WORD_IDS = f"{API_ROOT}/words"
+    GET_AUDIO = f"{API_ROOT}/words/download/{{audio_id}}"
+    POST_CHECK_WORD = f"{API_ROOT}/words/check/{{word_id}}"
+
     GET_HEALTH = f"{API_ROOT}/health"
 
 
