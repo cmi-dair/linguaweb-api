@@ -72,4 +72,4 @@ async def add_preset_words(
     logger.debug("Adding preset words.")
     word_models = await controller.add_preset_words(session, s3_client)
     logger.debug("Added preset words.")
-    return word_models
+    return word_models  # type: ignore[return-value] # FastAPI magic casts to the type hint.

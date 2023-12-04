@@ -3,7 +3,9 @@ import abc
 import logging
 from typing import Any, Literal, TypedDict
 
+import fastapi
 import openai
+from fastapi import status
 
 from linguaweb_api.core import config
 
@@ -72,6 +74,11 @@ class GPT(OpenAIBaseClass):
             messages=messages,  # type: ignore[arg-type]
         )
 
+        if not response.choices[0].message.content:
+            raise fastapi.HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Faulty response from OpenAI.",
+            )
         return response.choices[0].message.content
 
 
@@ -90,7 +97,7 @@ class TextToSpeech(OpenAIBaseClass):
         """
         response = self.client.audio.speech.create(
             model=OPENAI_TTS_MODEL,
-            voice=OPENAI_VOICE,
+            voice=OPENAI_VOICE.value,
             input=text,
         )
 
