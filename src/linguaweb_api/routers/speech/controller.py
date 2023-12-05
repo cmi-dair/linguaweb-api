@@ -29,10 +29,34 @@ async def transcribe(audio: fastapi.UploadFile) -> str:
             stripped of newlines and converted to lowercase.
     """
     logger.debug("Transcribing audio.")
+    await _check_file_size(audio, max_size=1024 * 1024)
+
     with tempfile.TemporaryDirectory() as temp_dir:
         target_path = pathlib.Path(temp_dir) / f"audio{TARGET_FILE_FORMAT}"
         _convert_audio(audio, temp_dir, target_path)
         return await openai.SpeechToText().run(target_path)
+
+
+async def _check_file_size(audio: fastapi.UploadFile, max_size: int) -> None:
+    """Check if the size of the audio file exceeds the maximum allowed size.
+
+    Args:
+        audio: The audio file to check.
+        max_size: The maximum allowed size in bytes.
+
+    Raises:
+        fastapi.HTTPException: 413 If the audio file size exceeds the maximum
+        allowed size or if the audio file is not seekable.
+    """
+    fs = await audio.read()
+    if len(fs) > max_size:
+        msg = f"Audio file size exceeds maximum allowed size of {max_size} bytes."
+        logger.error(msg)
+        raise fastapi.HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=msg,
+        )
+    await audio.seek(0)
 
 
 def _convert_audio(
@@ -46,6 +70,9 @@ def _convert_audio(
         audio: The audio file.
         directory: The directory to save the audio file to.
         target_path: The path to save the audio file to.
+
+    Raises:
+        fastapi.HTTPException: 400 If the audio file does not have a filename.
     """
     if audio.filename is None:
         raise fastapi.HTTPException(

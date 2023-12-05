@@ -25,6 +25,9 @@ router = fastapi.APIRouter(prefix="/speech", tags=["speech"])
         status.HTTP_400_BAD_REQUEST: {
             "description": "The audio file must have a filename.",
         },
+        status.HTTP_413_REQUEST_ENTITY_TOO_LARGE: {
+            "description": "The audio file size exceeds the maximum allowed size.",
+        },
     },
 )
 async def transcribe(audio: fastapi.UploadFile = fastapi.File(...)) -> str:
