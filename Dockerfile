@@ -7,7 +7,9 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 COPY src ./src
 
-RUN pip install poetry && \
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry install --no-dev --no-interaction --no-ansi && \
     rm -rf /root/.cache

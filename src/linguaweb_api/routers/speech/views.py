@@ -1,0 +1,42 @@
+"""View definitions for the speech router."""
+import logging
+
+import fastapi
+from fastapi import status
+
+from linguaweb_api.core import config
+from linguaweb_api.routers.speech import controller
+
+settings = config.get_settings()
+LOGGER_NAME = settings.LOGGER_NAME
+
+logger = logging.getLogger(LOGGER_NAME)
+
+router = fastapi.APIRouter(prefix="/speech", tags=["speech"])
+
+
+@router.post(
+    "/transcribe",
+    response_model=str,
+    status_code=status.HTTP_200_OK,
+    summary="Transcribes audio.",
+    description="Endpoint that uses OpenAI's Whisper API to transcribe audio.",
+    responses={
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "The audio file must have a filename.",
+        },
+    },
+)
+async def transcribe(audio: fastapi.UploadFile = fastapi.File(...)) -> str:
+    """Transcribes audio using OpenAI's Whisper API.
+
+    Args:
+        audio: The audio file.
+
+    Returns:
+        The transcription of the audio as a string.
+    """
+    logger.debug("Transcribing audio.")
+    transcription = controller.transcribe(audio)
+    logger.debug("Transcribed audio.")
+    return await transcription

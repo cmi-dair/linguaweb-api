@@ -35,6 +35,8 @@ class Endpoints(str, enum.Enum):
     GET_AUDIO = f"{API_ROOT}/words/download/{{audio_id}}"
     POST_CHECK_WORD = f"{API_ROOT}/words/check/{{word_id}}"
 
+    POST_SPEECH_TRANSCRIBE = f"{API_ROOT}/speech/transcribe"
+
     GET_HEALTH = f"{API_ROOT}/health"
 
 

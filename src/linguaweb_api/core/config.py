@@ -44,6 +44,10 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
         "tts-1",
         json_schema_extra={"env": "OPENAI_TTS_MODEL"},
     )
+    OPENAI_STT_MODEL: openai_constants.STTModels = pydantic.Field(
+        "whisper-1",
+        json_schema_extra={"env": "OPENAI_STT_MODEL"},
+    )
 
     S3_ENDPOINT_URL: str | None = pydantic.Field(
         None,

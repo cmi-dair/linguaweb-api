@@ -23,6 +23,12 @@ class TTSModels(str, enum.Enum):
     TTS1 = "tts-1"
 
 
+class STTModels(str, enum.Enum):
+    """Supported Speech-To-Text models."""
+
+    WHISPER1 = "whisper-1"
+
+
 class GPTModels(str, enum.Enum):
     """Supported GPT models."""
 
