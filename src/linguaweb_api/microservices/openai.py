@@ -1,6 +1,7 @@
 """This module contains interactions with OpenAI models."""
 import abc
 import logging
+import pathlib
 from typing import Any, Literal, TypedDict
 
 import fastapi
@@ -13,6 +14,7 @@ settings = config.get_settings()
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 OPENAI_GPT_MODEL = settings.OPENAI_GPT_MODEL
 OPENAI_TTS_MODEL = settings.OPENAI_TTS_MODEL
+OPENAI_STT_MODEL = settings.OPENAI_STT_MODEL
 OPENAI_VOICE = settings.OPENAI_VOICE
 LOGGER_NAME = settings.LOGGER_NAME
 
@@ -96,9 +98,30 @@ class TextToSpeech(OpenAIBaseClass):
             The model's response.
         """
         response = self.client.audio.speech.create(
-            model=OPENAI_TTS_MODEL,
+            model=OPENAI_TTS_MODEL.value,
             voice=OPENAI_VOICE.value,
             input=text,
         )
 
         return b"".join(response.iter_bytes())
+
+
+class SpeechToText(OpenAIBaseClass):
+    """A class for running the Speech-To-Text models."""
+
+    async def run(self, audio_file: pathlib.Path | str) -> str:
+        """Runs the Speech-To-Text model.
+
+        Args:
+            audio_file: The audio to convert to text.
+            model: The name of the Speech-To-Text model to use.
+
+        Returns:
+            The model's response.
+        """
+        with pathlib.Path(audio_file).open("rb") as audio:
+            return self.client.audio.transcriptions.create(
+                model=OPENAI_STT_MODEL.value,
+                file=audio,
+                response_format="text",
+            )  # type: ignore[return-value] # response_format overrides output type.

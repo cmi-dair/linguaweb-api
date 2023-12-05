@@ -8,6 +8,7 @@ from linguaweb_api.core import config, middleware
 from linguaweb_api.microservices import sql
 from linguaweb_api.routers.admin import views as admin_views
 from linguaweb_api.routers.health import views as health_views
+from linguaweb_api.routers.speech import views as speech_views
 from linguaweb_api.routers.words import views as words_views
 
 settings = config.get_settings()
@@ -47,6 +48,7 @@ logger.info("Initializing API routes.")
 base_router = fastapi.APIRouter(prefix="/api/v1")
 base_router.include_router(admin_views.router)
 base_router.include_router(health_views.router)
+base_router.include_router(speech_views.router)
 base_router.include_router(words_views.router)
 app.include_router(base_router)
 
