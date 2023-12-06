@@ -28,20 +28,7 @@ app = fastapi.FastAPI(
         "email": "dair@childmind.org",
     },
     swagger_ui_parameters={"operationsSorter": "method"},
-    openapi_tags=[
-        {
-            "name": "admin",
-            "description": "Operations reserved for administrators.",
-        },
-        {
-            "name": "health",
-            "description": "Operations related to the health of the API.",
-        },
-        {
-            "name": "words",
-            "description": "Operations related to words.",
-        },
-    ],
+    openapi_tags=config.open_api_specification(),
 )
 
 logger.info("Initializing API routes.")

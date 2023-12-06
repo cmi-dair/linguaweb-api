@@ -22,7 +22,8 @@ router = fastapi.APIRouter(prefix="/admin", tags=["admin"])
     response_model=schemas.Word,
     status_code=status.HTTP_201_CREATED,
     summary="Adds a word to the database.",
-    description="Adds a word to the database.",
+    description="""Adds a word to the database. This will also perform all the OpenAI
+    calls to create the word's tasks.""",
     responses={
         status.HTTP_409_CONFLICT: {
             "description": "Word already exists in database.",
@@ -52,7 +53,7 @@ async def add_word(
     response_model=list[schemas.Word],
     status_code=status.HTTP_201_CREATED,
     summary="Adds preset words to the database.",
-    description="Adds preset words to the database.",
+    description="Wrapper around the add_words function that adds all preset words.",
     responses={
         status.HTTP_409_CONFLICT: {
             "description": "All preset words already exist in database.",
