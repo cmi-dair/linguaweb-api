@@ -12,7 +12,6 @@ from linguaweb_api.microservices import sql
 API_ROOT = "/api/v1"
 
 
-@pytest.fixture(scope="session", autouse=True)
 class Endpoints(str, enum.Enum):
     """Enum class that represents the available endpoints for the API."""
 
