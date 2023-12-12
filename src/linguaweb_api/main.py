@@ -28,7 +28,7 @@ app = fastapi.FastAPI(
         "email": "dair@childmind.org",
     },
     swagger_ui_parameters={"operationsSorter": "method"},
-    openapi_tags=config.open_api_specification(),
+    openapi_tags=config.open_api_specification(),  # type: ignore[arg-type] # Our class is more specific.
 )
 
 logger.info("Initializing API routes.")
