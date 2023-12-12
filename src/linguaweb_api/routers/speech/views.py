@@ -19,8 +19,10 @@ router = fastapi.APIRouter(prefix="/speech", tags=["speech"])
     "/transcribe",
     response_model=str,
     status_code=status.HTTP_200_OK,
-    summary="Transcribes audio.",
-    description="Endpoint that uses OpenAI's Whisper API to transcribe audio.",
+    summary="Transcribes an audio file and returns the transcription.",
+    description="""Uses OpenAI's Whisper API to transcribe the provided audio. Maximum
+        allowed file size is 1 MB, and the audio file must be in a format that ffmpeg
+        can convert to mp3.""",
     responses={
         status.HTTP_400_BAD_REQUEST: {
             "description": "The audio file must have a filename.",

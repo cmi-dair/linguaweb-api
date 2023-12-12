@@ -22,7 +22,7 @@ router = fastapi.APIRouter(prefix="/words", tags=["words"])
     response_model=list[int],
     status_code=status.HTTP_200_OK,
     summary="Returns all word IDs.",
-    description="Returns all word IDs.",
+    description="""Returns the IDs of all words in the database.""",
 )
 async def get_all_word_ids(
     session: orm.Session = fastapi.Depends(sql.get_session),
@@ -43,7 +43,7 @@ async def get_all_word_ids(
     response_model=schemas.WordData,
     status_code=status.HTTP_200_OK,
     summary="Returns the data of a word.",
-    description="Returns the data of a word.",
+    description="""Returns the complete SQL model of a word.""",
     responses={
         status.HTTP_404_NOT_FOUND: {
             "description": "Word not found.",
@@ -69,8 +69,8 @@ async def get_word(
 @router.post(
     "/check/{word_id}",
     status_code=status.HTTP_200_OK,
-    summary="Checks attributes of a word.",
-    description="Checks attributes of a word.",
+    summary="Checks whether a guessed word is correct.",
+    description="Given an ID and a guessed word, checks if the guess is correct.",
 )
 async def check_word(
     word_id: int = fastapi.Path(..., title="The ID of the word to check."),
@@ -94,7 +94,7 @@ async def check_word(
     "/download/{identifier}",
     status_code=status.HTTP_200_OK,
     summary="Returns the audio of a word.",
-    description="Returns the audio of a word.",
+    description="Downloads the audio file for a specific word by its ID.",
 )
 async def get_audio(
     identifier: int = fastapi.Path(..., title="The id of the word."),

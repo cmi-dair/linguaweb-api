@@ -1,6 +1,7 @@
 """Settings for the API."""
 import functools
 import logging
+from typing import NotRequired, TypedDict
 
 import pydantic
 import pydantic_settings
@@ -107,3 +108,45 @@ def initialize_logger() -> None:
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+
+
+class ExternalDocumentation(TypedDict):
+    """OpenAPI external documentation definition."""
+
+    description: str
+    url: str
+
+
+class OpenApiTag(TypedDict):
+    """OpenAPI tag definition."""
+
+    name: str
+    description: str
+    externalDocs: NotRequired[ExternalDocumentation]
+
+
+def open_api_specification() -> list[OpenApiTag]:
+    """Returns the OpenAPI specification tags.
+
+    Returns:
+        list[OpenApiTag]: A list of OpenApiTag objects representing
+            the tags in the OpenAPI specification.
+    """
+    return [
+        {
+            "name": "admin",
+            "description": "Operations reserved for administrators.",
+        },
+        {
+            "name": "health",
+            "description": "Operations related to the health of the API.",
+        },
+        {
+            "name": "speech",
+            "description": "Operations related to speech transcription.",
+        },
+        {
+            "name": "words",
+            "description": "Operations related to words.",
+        },
+    ]
