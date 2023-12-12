@@ -84,7 +84,7 @@ async def check_word(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Word ID not found.",
         )
-    return word_model.word.lower() == word.lower()
+    return word_model.word.lower().strip() == word.lower().strip()
 
 
 def download_audio(identifier: int, session: orm.Session, s3_client: s3.S3) -> bytes:

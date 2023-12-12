@@ -13,7 +13,6 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
 
     model_config = pydantic_settings.SettingsConfigDict(
         env_prefix="LWAPI_",
-        env_file=".env",
         env_file_encoding="utf-8",
     )
 

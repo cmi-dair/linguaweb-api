@@ -92,6 +92,34 @@ def test_post_check_word(
     assert response.json() is True
 
 
+def test_post_check_word_case_insensitive(
+    word: models.Word,
+    client: testclient.TestClient,
+    endpoints: conftest.Endpoints,
+) -> None:
+    """Tests the check word endpoint with wrong case."""
+    endpoint = endpoints.POST_CHECK_WORD.format(word_id=word.id)
+
+    response = client.post(endpoint, data={"word": word.word.upper()})
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() is True
+
+
+def test_post_check_word_with_spaces(
+    word: models.Word,
+    client: testclient.TestClient,
+    endpoints: conftest.Endpoints,
+) -> None:
+    """Tests the check word endpoint with leading and trailing spaces."""
+    endpoint = endpoints.POST_CHECK_WORD.format(word_id=word.id)
+
+    response = client.post(endpoint, data={"word": f" {word.word} \n"})
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() is True
+
+
 @moto.mock_s3
 def test_get_audio(
     mocker: pytest_mock.MockFixture,
