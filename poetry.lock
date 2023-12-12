@@ -1717,21 +1717,6 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "six", "virtualenv"]
 
 [[package]]
-name = "pytest-dotenv"
-version = "0.5.2"
-description = "A py.test plugin that parses environment files before running tests"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pytest-dotenv-0.5.2.tar.gz", hash = "sha256:2dc6c3ac6d8764c71c6d2804e902d0ff810fa19692e95fe138aefc9b1aa73732"},
-    {file = "pytest_dotenv-0.5.2-py3-none-any.whl", hash = "sha256:40a2cece120a213898afaa5407673f6bd924b1fa7eafce6bda0e8abffe2f710f"},
-]
-
-[package.dependencies]
-pytest = ">=5.0.0"
-python-dotenv = ">=0.9.1"
-
-[[package]]
 name = "pytest-mock"
 version = "3.12.0"
 description = "Thin-wrapper around the mock package for easier use with pytest"
@@ -2644,4 +2629,4 @@ docs = []
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "abd10ee94152b758cbdb9822f1c1fd04a5cd1835d0d98e0b4a40ef079c546957"
+content-hash = "4299360790ea62b1b3f3066dbac03ff8929c3d25a19be960400ce4d4619ecc29"
