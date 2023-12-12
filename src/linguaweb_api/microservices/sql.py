@@ -57,7 +57,7 @@ class Database:
         If the environment is set to 'development', returns a SQLite URL.
         Otherwise, returns a PostgreSQL URL based on the environment variables.
         """
-        if ENVIRONMENT == "development":
+        if ENVIRONMENT in ["development", "testing"]:
             return "sqlite:///linguaweb.sqlite"
         return (
             "postgresql://"
