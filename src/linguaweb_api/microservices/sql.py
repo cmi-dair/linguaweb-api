@@ -13,6 +13,7 @@ LOGGER_NAME = settings.LOGGER_NAME
 POSTGRES_URL = settings.POSTGRES_URL
 POSTGRES_USER = settings.POSTGRES_USER
 POSTGRES_PASSWORD = settings.POSTGRES_PASSWORD
+SQLITE_FILE = settings.SQLITE_FILE
 ENVIRONMENT = settings.ENVIRONMENT
 
 logger = logging.getLogger(LOGGER_NAME)
@@ -58,7 +59,7 @@ class Database:
         Otherwise, returns a PostgreSQL URL based on the environment variables.
         """
         if ENVIRONMENT in ["development", "testing"]:
-            return "sqlite:///linguaweb.sqlite"
+            return f"sqlite:///{SQLITE_FILE}"
         return (
             "postgresql://"
             f"{POSTGRES_USER.get_secret_value()}:"
