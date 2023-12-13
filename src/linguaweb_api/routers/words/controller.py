@@ -84,7 +84,7 @@ async def check_word(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Word ID not found.",
         )
-    return word_model.word.lower().strip() == word.lower().strip()
+    return _sanitize_word(word) == _sanitize_word(word_model.word)
 
 
 def download_audio(identifier: int, session: orm.Session, s3_client: s3.S3) -> bytes:
@@ -112,3 +112,18 @@ def download_audio(identifier: int, session: orm.Session, s3_client: s3.S3) -> b
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Audio not found.",
         ) from exception_info
+
+
+def _sanitize_word(word: str) -> str:
+    """Sanitizes a word.
+
+    Removes leading and trailing whitespace, converts to lowercase
+    and removes punctuation.
+
+    Args:
+        word: The word to sanitize.
+
+    Returns:
+        The sanitized word.
+    """
+    return word.lower().strip().strip(".,?!;:'\"")
