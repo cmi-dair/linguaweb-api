@@ -83,6 +83,11 @@ class Settings(pydantic_settings.BaseSettings):  # type: ignore[valid-type, misc
         json_schema_extra={"env": "POSTGRES_PASSWORD"},
     )
 
+    SQLITE_FILE: str = pydantic.Field(
+        "linguaweb.sqlite",
+        json_schema_extra={"env": "SQLITE_FILE"},
+    )
+
 
 @functools.lru_cache
 def get_settings() -> Settings:
