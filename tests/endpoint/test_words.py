@@ -8,6 +8,8 @@ from sqlalchemy import orm
 from linguaweb_api.core import models
 from tests.endpoint import conftest
 
+WORD = "The bird"
+
 
 @pytest.fixture()
 def word(session: orm.Session) -> models.Word:
@@ -17,7 +19,7 @@ def word(session: orm.Session) -> models.Word:
         session: The database session.
     """
     audio = models.Word(
-        word="The bird",
+        word=WORD,
         description="The description is the word.",
         synonyms=["The", "synonym", "is", "the", "word."],
         antonyms=["The", "antonym", "is", "the", "word."],
@@ -78,7 +80,19 @@ def test_get_word_does_not_exist(
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
+@pytest.mark.parametrize(
+    "tested_word",
+    [
+        WORD,
+        f" {WORD} \n",
+        WORD.upper(),
+        WORD.lower(),
+        WORD.capitalize(),
+        f"{WORD}!?.:;,",
+    ],
+)
 def test_post_check_word(
+    tested_word: str,
     word: models.Word,
     client: testclient.TestClient,
     endpoints: conftest.Endpoints,
@@ -86,35 +100,7 @@ def test_post_check_word(
     """Tests the check word endpoint."""
     endpoint = endpoints.POST_CHECK_WORD.format(word_id=word.id)
 
-    response = client.post(endpoint, data={"word": word.word})
-
-    assert response.status_code == status.HTTP_200_OK
-    assert response.json() is True
-
-
-def test_post_check_word_case_insensitive(
-    word: models.Word,
-    client: testclient.TestClient,
-    endpoints: conftest.Endpoints,
-) -> None:
-    """Tests the check word endpoint with wrong case."""
-    endpoint = endpoints.POST_CHECK_WORD.format(word_id=word.id)
-
-    response = client.post(endpoint, data={"word": word.word.upper()})
-
-    assert response.status_code == status.HTTP_200_OK
-    assert response.json() is True
-
-
-def test_post_check_word_with_spaces(
-    word: models.Word,
-    client: testclient.TestClient,
-    endpoints: conftest.Endpoints,
-) -> None:
-    """Tests the check word endpoint with leading and trailing spaces."""
-    endpoint = endpoints.POST_CHECK_WORD.format(word_id=word.id)
-
-    response = client.post(endpoint, data={"word": f" {word.word} \n"})
+    response = client.post(endpoint, data={"word": tested_word})
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json() is True
